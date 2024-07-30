@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class ListApplication {
 
 	public static void main(String[] args) {
+
 		SpringApplication.run(ListApplication.class, args);
 	}
 
