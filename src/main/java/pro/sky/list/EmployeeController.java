@@ -1,9 +1,7 @@
 package pro.sky.list;
 
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -22,19 +20,26 @@ public class EmployeeController {
   }
 
   @GetMapping("/add")
-  public Employee addEmployee(@RequestParam String firstName, @RequestParam String lastName) {
-    return service.add(firstName, lastName);
-  }
-  @GetMapping("/remove")
-  public Employee removeEmployee(@RequestParam String firstName, @RequestParam String lastName) {
-    return service.remowe(firstName, lastName);
-  }
-  @GetMapping("/finde")
-  public Employee findeEmployee(@RequestParam String firstName, @RequestParam String lastName) {
-    return service.finde(firstName, lastName);
+  public Employee addEmployee(@RequestParam String firstName,
+      @RequestParam String lastName,
+      @RequestParam int departmentId,
+      @RequestParam int salary) {
+    return service.addEmployee(firstName, lastName, departmentId, salary);
   }
 
-  @GetMapping
+  @GetMapping("/remove")
+  public String removeEmployee(@RequestParam String firstName,
+      @RequestParam String lastName) {
+    return service.removeEmployee(firstName, lastName);
+  }
+
+  @GetMapping("/find")
+  public Employee findEmployee(@RequestParam String firstName,
+      @RequestParam String lastName) {
+    return service.findeEmployee(firstName, lastName);
+  }
+
+  @GetMapping("/find-all")
   public Collection<Employee> findAll() {
     return service.findAll();
   }

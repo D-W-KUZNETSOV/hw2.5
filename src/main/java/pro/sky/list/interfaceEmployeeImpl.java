@@ -12,47 +12,64 @@ import pro.sky.list.exeption.EmployeeNotFoundException;
 
 @Service
 public class interfaceEmployeeImpl implements EmployeeService {
-private final Map<String,Employee>employees;
 
+  private static final int MAX_EMPLOYEE = 10;
 
+  private final List<Employee> employees = new ArrayList<>(
+      List.of(
 
-  public interfaceEmployeeImpl(Map<String, Employee> employees) {
-    this.employees = new HashMap<>();
+          new Employee("Иван", "Иванов", 1, 14000),
 
-  }
+          new Employee("Семён", "Фёдоров", 2, 10000),
 
+          new Employee("Василий", "Степанов", 3, 25000),
+
+          new Employee("Николай", "Афанасьев", 4, 11000),
+
+          new Employee("Владислав", "Киселёв", 3, 44000),
+
+          new Employee("Антон", "Сергеев", 2, 3000)
+      ));
 
 
   @Override
-  public Employee add(String firstName, String lastName) {
-    Employee employee = new Employee(firstName, lastName);
-    if (employees.containsKey(employee.getFullName())) {
-      throw new EmployeeAlreadyAddException();
+  public Employee addEmployee(String firstName, String lastName, int departmentId, int salary) {
+    Employee employee = new Employee(firstName, lastName, departmentId, salary);
+    if (employees.size() >= MAX_EMPLOYEE) {
+      throw new EmployeeNotFoundException();
+    } else {
+      if (employees.contains(employee.getFullName())) {
+      } else {
+        throw new EmployeeAlreadyAddException();
+      }
     }
-    employees.put(employee.getFullName(),employee);
+    employees.add(employee);
     return employee;
   }
 
+
   @Override
-  public Employee remowe(String firstName, String lastName) {
-    Employee employee = new Employee(firstName, lastName);
-    if (employees.containsKey(employee.getFullName())) {
-      return employees.remove(employee.getFullName());
+  public String removeEmployee(String firstName, String lastName) {
+    boolean removed = employees.removeIf(
+        employee -> employee.getFullName().equals(employee.getFullName()));
+    if (removed) {
+      return "Сотрудник " + firstName + " " + lastName + " удалён";
+    } else {
+      throw new EmployeeNotFoundException();
     }
-    throw new EmployeeNotFoundException();
   }
 
   @Override
-  public Employee finde(String firstName, String lastName) {
-    Employee employee = new Employee(firstName, lastName);
-    if (employees.containsKey(employee.getFullName())) {
-      return employees.get(employee.getFullName());
-    }
-    throw new EmployeeNotFoundException();
+  public Employee findeEmployee(String firstName, String lastName) {
+    return employees.stream()
+        .filter(e -> e.getFirstName().equals(firstName) && e.getLastName().equals(lastName))
+        .findFirst()
+        .orElseThrow(() -> new EmployeeNotFoundException());
   }
 
   @Override
   public Collection<Employee> findAll() {
-    return Collections.unmodifiableCollection(employees.values());
+    return employees;
   }
 }
+
