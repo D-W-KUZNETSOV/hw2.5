@@ -1,13 +1,13 @@
 package pro.sky.list;
 
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import pro.sky.list.exeption.ValidationExeption;
 
 @RestController
 @RequestMapping("/Employee")
@@ -22,21 +22,45 @@ public class EmployeeController {
   }
 
   @GetMapping("/add")
-  public Employee addEmployee(@RequestParam String firstName, @RequestParam String lastName) {
-    return service.add(firstName, lastName);
-  }
-  @GetMapping("/remove")
-  public Employee removeEmployee(@RequestParam String firstName, @RequestParam String lastName) {
-    return service.remowe(firstName, lastName);
-  }
-  @GetMapping("/finde")
-  public Employee findeEmployee(@RequestParam String firstName, @RequestParam String lastName) {
-    return service.finde(firstName, lastName);
+  public Employee addEmployee(@RequestParam String firstName,
+      @RequestParam String lastName,
+      @RequestParam int departmentId,
+      @RequestParam int salary) {
+    validate(firstName,lastName);
+
+    return service.addEmployee(StringUtils.capitalize(firstName),
+        StringUtils.capitalize(lastName),
+        departmentId,
+        salary);
   }
 
-  @GetMapping
+  @GetMapping("/remove")
+  public String removeEmployee(@RequestParam String firstName,
+      @RequestParam String lastName) {
+    return service.removeEmployee(StringUtils.capitalize(firstName),
+        StringUtils.capitalize(lastName));
+  }
+
+  @GetMapping("/find")
+  public Employee findEmployee(@RequestParam String firstName,
+      @RequestParam String lastName) {
+    return service.findeEmployee(StringUtils.capitalize(firstName),
+        StringUtils.capitalize(lastName));
+  }
+
+  @GetMapping("/find-all")
   public Collection<Employee> findAll() {
     return service.findAll();
+  }
+
+  public void validate(String ...values) {
+    for (String value : values) {
+      if (!StringUtils.isAlpha(value)) {
+        throw new ValidationExeption();
+      }
+
+    }
+
   }
 }
 

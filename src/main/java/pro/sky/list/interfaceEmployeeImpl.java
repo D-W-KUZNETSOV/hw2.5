@@ -3,7 +3,9 @@ package pro.sky.list;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.springframework.stereotype.Service;
 import pro.sky.list.exeption.EmployeeAlreadyAddException;
 import pro.sky.list.exeption.EmployeeNotFoundException;
@@ -11,42 +13,63 @@ import pro.sky.list.exeption.EmployeeNotFoundException;
 @Service
 public class interfaceEmployeeImpl implements EmployeeService {
 
-  private final List<Employee>employeeList;
+  private static final int MAX_EMPLOYEE = 10;
 
-  public interfaceEmployeeImpl() {
-    this.employeeList = new ArrayList<>();
-  }
+  private final List<Employee> employees = new ArrayList<>(
+      List.of(
+
+          new Employee("Иван", "Иванов", 1, 14000),
+
+          new Employee("Семён", "Фёдоров", 2, 10000),
+
+          new Employee("Василий", "Степанов", 3, 25000),
+
+          new Employee("Николай", "Афанасьев", 4, 11000),
+
+          new Employee("Владислав", "Киселёв", 3, 44000),
+
+          new Employee("Антон", "Сергеев", 2, 3000)
+      ));
+
 
   @Override
-  public Employee add(String firstName, String lastName) {
-    Employee employee = new Employee(firstName, lastName);
-    if (employeeList.contains(employee)) {
-      throw new EmployeeAlreadyAddException();
+  public Employee addEmployee(String firstName, String lastName, int departmentId, int salary) {
+    Employee employee = new Employee(firstName, lastName, departmentId, salary);
+    if (employees.size() >= MAX_EMPLOYEE) {
+      throw new EmployeeNotFoundException();
+    } else {
+      if (employees.contains(employee.getFullName())) {
+      } else {
+        throw new EmployeeAlreadyAddException();
+      }
     }
-    employeeList.add(employee);
+    employees.add(employee);
     return employee;
   }
 
+
   @Override
-  public Employee remowe(String firstName, String lastName) {
-    Employee employee = new Employee(firstName, lastName);
-    if (employeeList.contains(employee)) {
-      employeeList.remove(employee);
+  public String removeEmployee(String firstName, String lastName) {
+    boolean removed = employees.removeIf(
+        employee -> employee.getFullName().equals(employee.getFullName()));
+    if (removed) {
+      return "Сотрудник " + firstName + " " + lastName + " удалён";
+    } else {
+      throw new EmployeeNotFoundException();
     }
-    throw new EmployeeNotFoundException();
   }
 
   @Override
-  public Employee finde(String firstName, String lastName) {
-    Employee employee = new Employee(firstName, lastName);
-    if (employeeList.contains(employee)) {
-      return employee;
-    }
-    throw new EmployeeNotFoundException();
+  public Employee findeEmployee(String firstName, String lastName) {
+    return employees.stream()
+        .filter(e -> e.getFirstName().equals(firstName) && e.getLastName().equals(lastName))
+        .findFirst()
+        .orElseThrow(() -> new EmployeeNotFoundException());
   }
 
   @Override
   public Collection<Employee> findAll() {
-    return Collections.unmodifiableList(employeeList);
+    return employees;
   }
 }
+

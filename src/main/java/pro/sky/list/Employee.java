@@ -6,13 +6,16 @@ public class Employee {
 
   private final String firstName;
   private final String lastName;
+  private final int departmentId;
+  private final int salary;
 
 
-  public Employee(String firstName, String lastName) {
+  public Employee(String firstName, String lastName,int departmentId,int salary) {
     this.firstName = firstName;
     this.lastName = lastName;
+    this.departmentId = departmentId;
+    this.salary = salary;
   }
-
 
   public String getFirstName() {
     return firstName;
@@ -22,14 +25,17 @@ public class Employee {
     return lastName;
   }
 
+  public int getDepartmentId() {
+    return departmentId;
+  }
+
+  public String getFullName() {
+    return firstName + " " + lastName;
+  }
 
 
-  @Override
-  public String toString() {
-    return "Employee{" +
-        "firstName='" + firstName + '\'' +
-        ", lastName='" + lastName + '\'' +
-        '}';
+  public int getSalary() {
+    return salary;
   }
 
   @Override
@@ -41,15 +47,28 @@ public class Employee {
       return false;
     }
     Employee employee = (Employee) o;
-    return Objects.equals(firstName, employee.firstName) && Objects.equals(
-        lastName, employee.lastName);
+    return departmentId == employee.departmentId && salary == employee.salary && Objects.equals(
+        firstName, employee.firstName) && Objects.equals(lastName, employee.lastName);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(firstName, lastName);
+    return Objects.hash(firstName, lastName, departmentId, salary);
+  }
+
+  @Override
+  public String toString() {
+    return "Employee{" + "firstName='" + firstName + '\'' + ", lastName='" + lastName + '\''
+        + ", departmentId=" + departmentId + ", salary=" + salary + '}';
   }
 
 
 }
+
+
+
+
+
+
+
 
