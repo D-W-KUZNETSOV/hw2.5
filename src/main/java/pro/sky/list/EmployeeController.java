@@ -14,10 +14,10 @@ import pro.sky.list.exeption.ValidationExeption;
 
 public class EmployeeController {
 
-  private final EmployeeService service;
+  private final interfaceEmployeeImpl service;
 
 
-  public EmployeeController(EmployeeService service) {
+  public EmployeeController(interfaceEmployeeImpl service) {
     this.service = service;
   }
 
@@ -35,21 +35,28 @@ public class EmployeeController {
   }
 
   @GetMapping("/remove")
-  public String removeEmployee(@RequestParam String firstName,
-      @RequestParam String lastName) {
-    return service.removeEmployee(StringUtils.capitalize(firstName),
+  public String removeEmployee(@RequestParam ("firstname")String firstName,
+      @RequestParam("lastname") String lastName) {
+    validate(firstName,lastName);
+    var removed =service.removeEmployee(StringUtils.capitalize(firstName),
         StringUtils.capitalize(lastName));
+    if (removed) {
+      return "сотрудник" + firstName + " " + lastName + " удалён";
+    }
+    return "сотрудник" + firstName + " " + lastName + " не найден";
   }
 
   @GetMapping("/find")
   public Employee findEmployee(@RequestParam String firstName,
       @RequestParam String lastName) {
-    return service.findeEmployee(StringUtils.capitalize(firstName),
+    validate(firstName, lastName);
+    return service.findEmployee(StringUtils.capitalize(firstName),
         StringUtils.capitalize(lastName));
   }
 
   @GetMapping("/find-all")
   public Collection<Employee> findAll() {
+
     return service.findAll();
   }
 

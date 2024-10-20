@@ -9,14 +9,16 @@ import org.springframework.stereotype.Service;
 @Service
 public class DepartmentService {
 
-  private final EmployeeService employeeService;
+  private final interfaceEmployeeImpl interfaceEmployee;
 
-  public DepartmentService(EmployeeService employeeService) {
-    this.employeeService = employeeService;
+
+  public DepartmentService(interfaceEmployeeImpl interfaceEmployee) {
+    this.interfaceEmployee = interfaceEmployee;
   }
 
+
   public Employee getMaxSalary(int departmentId) {
-    return employeeService.findAll()
+    return interfaceEmployee.findAll()
         .stream()
         .filter(employee -> departmentId == employee.getDepartmentId())
         .max(Comparator.comparingInt(Employee::getSalary))
@@ -24,7 +26,7 @@ public class DepartmentService {
   }
 
   public Employee getMinSalary(int departmentId) {
-    return employeeService.findAll()
+    return interfaceEmployee.findAll()
         .stream()
         .filter(employee -> departmentId == employee.getDepartmentId())
         .min(Comparator.comparingInt(Employee::getSalary))
@@ -32,14 +34,14 @@ public class DepartmentService {
   }
 
   public List<Employee> getByDepartment(int departmentId) {
-    return employeeService.findAll()
+    return interfaceEmployee.findAll()
         .stream()
         .filter(employee -> departmentId == employee.getDepartmentId())
         .toList();
   }
 
   public Map<Integer, List<Employee>> groupByDepartment() {
-    return employeeService.findAll()
+    return interfaceEmployee.findAll()
         .stream()
         .collect(Collectors.groupingBy(Employee::getDepartmentId));
   }
