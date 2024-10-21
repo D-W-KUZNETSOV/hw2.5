@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import pro.sky.list.exeption.ValidationExeption;
+import pro.sky.list.exeption.ValidationException;
 
 @RestController
 @RequestMapping("/Employee")
@@ -26,7 +26,7 @@ public class EmployeeController {
       @RequestParam String lastName,
       @RequestParam int departmentId,
       @RequestParam int salary) {
-    validate(firstName,lastName);
+    validate(firstName, lastName);
 
     return service.addEmployee(StringUtils.capitalize(firstName),
         StringUtils.capitalize(lastName),
@@ -35,32 +35,37 @@ public class EmployeeController {
   }
 
   @GetMapping("/remove")
-  public String removeEmployee(@RequestParam String firstName,
-      @RequestParam String lastName) {
-    return service.removeEmployee(StringUtils.capitalize(firstName),
+  public String removeEmployee(@RequestParam("firstname") String firstName,
+      @RequestParam("lastname") String lastName) {
+    validate(firstName, lastName);
+    var removed = service.removeEmployee(StringUtils.capitalize(firstName),
         StringUtils.capitalize(lastName));
+    if (removed) {
+      return "сотрудник" + firstName + " " + lastName + " удалён";
+    }
+    return "сотрудник" + firstName + " " + lastName + " не найден";
   }
 
   @GetMapping("/find")
   public Employee findEmployee(@RequestParam String firstName,
       @RequestParam String lastName) {
-    return service.findeEmployee(StringUtils.capitalize(firstName),
+    validate(firstName, lastName);
+    return service.findEmployee(StringUtils.capitalize(firstName),
         StringUtils.capitalize(lastName));
   }
 
   @GetMapping("/find-all")
   public Collection<Employee> findAll() {
+
     return service.findAll();
   }
 
-  public void validate(String ...values) {
+  public void validate(String... values) {
     for (String value : values) {
       if (!StringUtils.isAlpha(value)) {
-        throw new ValidationExeption();
+        throw new ValidationException();
       }
-
     }
-
   }
 }
 
