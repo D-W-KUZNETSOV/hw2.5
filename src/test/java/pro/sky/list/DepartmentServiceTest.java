@@ -11,7 +11,6 @@ import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.BDDMockito.Then;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -20,7 +19,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 public class DepartmentServiceTest {
 
   @Mock
-  interfaceEmployeeImpl interfaceEmployee;
+  EmployeeService interfaceEmployee;
   @InjectMocks
   DepartmentService departmentService;
 

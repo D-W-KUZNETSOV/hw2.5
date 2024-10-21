@@ -1,7 +1,6 @@
 package pro.sky.list;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.List;
@@ -10,9 +9,9 @@ import pro.sky.list.exeption.EmployeeAlreadyAddedException;
 import pro.sky.list.exeption.EmployeeNotFoundException;
 import pro.sky.list.exeption.EmployeeStorageIsFullException;
 
-final class interfaceEmployeeImplTest {
+class EmployeeServiceTest {
 
-  interfaceEmployeeImpl interfaceEmployee = new interfaceEmployeeImpl();
+  EmployeeService interfaceEmployee = new EmployeeService();
 
 
   @Test
@@ -28,22 +27,26 @@ final class interfaceEmployeeImplTest {
     assertThat(interfaceEmployee.findAll()).contains(emp);
 
   }
+
   @Test
-  void testAddEmployeeAlreadyExist(){
-    var emp =interfaceEmployee.addEmployee("Test","test test",1,10000);
+  void testAddEmployeeAlreadyExist() {
+    var emp = interfaceEmployee.addEmployee("Test", "test test", 1, 10000);
     assertThat(emp).isNotNull();
     assertThrows(
-        EmployeeAlreadyAddedException.class, ()->interfaceEmployee.addEmployee("Test","test test",1,10000));
+        EmployeeAlreadyAddedException.class,
+        () -> interfaceEmployee.addEmployee("Test", "test test", 1, 10000));
 
   }
+
   @Test
-  void testAddMaxEmployee(){
-    interfaceEmployee.addEmployee("Test1","test test1",1,10000);
-    interfaceEmployee.addEmployee("Test2","test test2",2,15000);
-    interfaceEmployee.addEmployee("Test3","test test3",3,11000);
-    interfaceEmployee.addEmployee("Test4","test test4",2,11000);
+  void testAddMaxEmployee() {
+    interfaceEmployee.addEmployee("Test1", "test test1", 1, 10000);
+    interfaceEmployee.addEmployee("Test2", "test test2", 2, 15000);
+    interfaceEmployee.addEmployee("Test3", "test test3", 3, 11000);
+    interfaceEmployee.addEmployee("Test4", "test test4", 2, 11000);
     assertThrows(
-        EmployeeStorageIsFullException.class, ()->interfaceEmployee.addEmployee("Test5","test test5",4,17000));
+        EmployeeStorageIsFullException.class,
+        () -> interfaceEmployee.addEmployee("Test5", "test test5", 4, 17000));
 
   }
 
@@ -53,8 +56,8 @@ final class interfaceEmployeeImplTest {
 
   @Test
   void findEmployee() {
-    interfaceEmployee.addEmployee("Test","test test",3,12000);
-    var actual=interfaceEmployee.findEmployee("Test","test test");
+    interfaceEmployee.addEmployee("Test", "test test", 3, 12000);
+    var actual = interfaceEmployee.findEmployee("Test", "test test");
     assertThat(actual).isNotNull();
     assertThat(actual.getLastName()).isEqualTo("test test");
     assertThat(actual.getFirstName()).isEqualTo("Test");
@@ -72,7 +75,7 @@ final class interfaceEmployeeImplTest {
 
   @Test
   void testFindAll() {
-    var expected= List.of(
+    var expected = List.of(
         new Employee("Иван", "Иванов", 1, 14000),
 
         new Employee("Семён", "Фёдоров", 2, 10000),
@@ -85,13 +88,11 @@ final class interfaceEmployeeImplTest {
 
         new Employee("Антон", "Сергеев", 2, 3000));
 
-        new Employee("Test","test test",2,12000);
+    new Employee("Test", "test test", 2, 12000);
 
-        new Employee("Test1","test test1",1,11000);
+    new Employee("Test1", "test test1", 1, 11000);
 
-        new Employee("Test2","test test2",3,14000);
-
-
+    new Employee("Test2", "test test2", 3, 14000);
 
     interfaceEmployee.addEmployee("Test", "test test", 2, 12000);
     interfaceEmployee.addEmployee("Test1", "test test1", 1, 11000);
@@ -102,7 +103,7 @@ final class interfaceEmployeeImplTest {
 
   @Test
   void testRemoveEmployee() {
-    assertThat(interfaceEmployee.removeEmployee("Test", "test test")).isTrue();
+    assertThat(interfaceEmployee.removeEmployee("Антон", "Сергеев")).isTrue();
     assertThat(interfaceEmployee.removeEmployee("NotFound", "NotFound")).isFalse();
   }
 
